@@ -36,6 +36,8 @@ app.use("/", express.static(path.join(__dirname, 'public')));
 // another way to serve static files, because it is relative to where your index.js/server.js file is located.
 
 app.use("/", require('./routes/root'));
+app.use("/api/v1/users", require('./routes/userRoutes'));
+app.use("/api/v1/notes", require('./routes/noteRoutes'));
 
 app.all('*', (req, res) => {
     res.status(404)
