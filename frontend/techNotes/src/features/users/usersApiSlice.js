@@ -12,7 +12,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
-            keepUnusedDataFor: 5, // only for development, otherwise keep default 60 seconds
+            // keepUnusedDataFor: 5, // only for development, otherwise keep default 60 seconds
+            // using prefetch component as alternative
             transformResponse: responseData => {
                 const loadedUsers = responseData.map(user => {
                     user.id = user._id
@@ -29,11 +30,49 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'User', id: 'LIST' }]
             }
         }),
+        addNewUser: builder.mutation({
+            query: initialUserData => ({
+                url: '/users',
+                method: 'POST',
+                body: {
+                    ...initialUserData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'User', id: "LIST" }
+            ]
+            // invalidatesTags forces the cache to be updated
+        }),
+        updateUser: builder.mutation({
+            query: initialUserData => ({
+                url: '/users',
+                method: 'PATCH',
+                body: {
+                    ...initialUserData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'User', id: arg.id }
+            ]
+        }),
+        deleteUser: builder.mutation({
+            query: ({ id }) => ({
+                url: `/users`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'User', id: arg.id }
+            ]
+        }),
     }),
 })
 
 export const {
     useGetUsersQuery,
+    useAddNewUserMutation,
+    useUpdateUserMutation,
+    useDeleteUserMutation,
 } = usersApiSlice
 
 
