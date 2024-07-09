@@ -10,13 +10,16 @@ const initialState = notesAdapter.getInitialState();
 export const notesApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getNotes: builder.query({
-            query: () => '/notes',
-            validateStatus: (response, result) => {
-                return response.status === 200 && !result.isError
-            },
+            query: () => ({
+                url: '/notes',
+                validateStatus: (response, result) => {
+                    return response.status === 200 && !result.isError
+                },
+            }),
             // keepUnusedDataFor: 5, // only for development, otherwise keep default 60 seconds
             // using prefetch component as alternative
             transformResponse: responseData => {
+                // responseData must be an array
                 const loadedNotes = responseData.map(note => {
                     note.id = note._id
                     return note
