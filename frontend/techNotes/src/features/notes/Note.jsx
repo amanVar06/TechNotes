@@ -4,10 +4,13 @@ import { useNavigate } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
 import { selectNoteById } from './notesApiSlice'
+import { selectUserById } from '../users/usersApiSlice'
 
 const Note = ({ noteId }) => {
 
     const note = useSelector(state => selectNoteById(state, noteId))
+    // console.log('Note: ', note)
+    const user = useSelector(state => selectUserById(state, note?.user))
 
     const navigate = useNavigate()
 
@@ -17,6 +20,8 @@ const Note = ({ noteId }) => {
         const updated = new Date(note.updatedAt).toLocaleString('en-US', { day: 'numeric', month: 'long' })
 
         const handleEdit = () => navigate(`/dash/notes/${noteId}`)
+
+        const cellStatus = user?.active ? '' : 'table__cell--inactive'
 
         return (
             <tr className="table__row">
@@ -29,7 +34,7 @@ const Note = ({ noteId }) => {
                 <td className="table__cell note__created">{created}</td>
                 <td className="table__cell note__updated">{updated}</td>
                 <td className="table__cell note__title">{note.title}</td>
-                <td className="table__cell note__username">{note.username}</td>
+                <td className={`table__cell note__username ${cellStatus}`}>{note.username}</td>
 
                 <td className="table__cell">
                     <button

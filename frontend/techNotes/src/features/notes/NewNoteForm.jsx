@@ -42,12 +42,17 @@ const NewNoteForm = ({ users }) => {
     }
 
     const options = users.map(user => {
-        return (
-            <option
-                key={user.id}
-                value={user.id}
-            > {user.username}</option >
-        )
+        // check first if user is active or not
+        // is it necessary to check if user is active?
+        if(user.active) {
+            return (
+                <option
+                    key={user.id}
+                    value={user.id}
+                > {user.username}</option >
+            )
+        }
+        
     })
 
     const errClass = isError ? "errmsg" : "offscreen"
