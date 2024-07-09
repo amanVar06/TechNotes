@@ -43,14 +43,13 @@ const createNewNote = asyncHandler(async (req, res) => {
     // we use exec() when passing any value in and we do need to return promise 
     // not using lean because we want other methods attached to it as a mongo document
 
-
     if(!userObj) {
         return res.status(404).json({message: "User not found"});
     }
 
 
     // check for duplicate title
-    const duplicate = await Note.findOne({title}).lean().exec();
+    const duplicate = await Note.findOne({title}).collation({locale: 'en', strength: 2}).lean().exec();
 
     if(duplicate) {
         return res.status(409).json({message: "Duplicate note title"});
@@ -90,7 +89,7 @@ const updateNote = asyncHandler(async (req, res) => {
     }
 
     // check for duplicate title
-    const duplicate = await Note.findOne({title}).lean().exec();
+    const duplicate = await Note.findOne({title}).collation({locale: 'en', strength: 2}).lean().exec();
 
     // Allow renaming of the original note 
     if(duplicate && duplicate?._id.toString() !== id) {

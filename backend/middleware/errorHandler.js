@@ -10,7 +10,8 @@ const errorHandler = (err, req, res, next) => {
 
     const status = res.statusCode ? res.statusCode : 500;
     res.status(status)
-    res.json({message: err.message});
+    res.json({message: err.message, isError: true});
+    // for managing error more appropriately in frontend using RTK Query (this flag is looked up by RTK query)
 
     next();
 }
