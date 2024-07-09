@@ -61,10 +61,11 @@ const PersistLogin = () => {
         content = <p>Loading...</p>
     } else if (isError) { //persist: yes, token: no
         // possible when refresh token is expired
+        // another case?
         console.log('error')
         content = (
             <p className='errmsg'>
-                {error.data?.message}
+                {`${error?.data?.message} - `}
                 <Link to="/login">Please login again</Link>.
             </p>
         )

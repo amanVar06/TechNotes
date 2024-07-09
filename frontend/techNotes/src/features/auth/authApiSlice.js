@@ -3,6 +3,13 @@ import { logOut, setCredentials } from './authSlice';
 
 // logout should be called an "action creator" as it exported from authSlice.actions
 
+/*
+when I login with Trust this device and try to logout immediately without any refresh api call occured, I am unable to return to home page. It stuck only there with no content.
+I think it's because in authApiSlice, at login mutation we are not using setCredential to set access token but we're doing this in refresh mutation, therefore i guess in persist login component when I want to select current token, I can't find any,  resulting into an error during logout.
+
+Think?
+*/
+
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         login: builder.mutation({
@@ -10,7 +17,17 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 url: '/auth',
                 method: 'POST',
                 body: { ...credentials }
-            })
+            }),
+            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled
+                    console.log('In login mutation', data)
+                    const { accessToken } = data
+                    dispatch(setCredentials({ accessToken }))
+                } catch (err) {
+                    console.log(err)
+                }
+            }
         }),
         sendLogout: builder.mutation({
             query: () => ({

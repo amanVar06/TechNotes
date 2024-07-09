@@ -40,7 +40,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
             // in code refreshResult?.error?.status === 403 is used which probably not correct as they changed expiresIn to 20 sec for refreshToken but maxAge for cookie stil 7 days, therefor I think we should use  401 instead of 403
             if (refreshResult?.error?.status === 403 || refreshResult?.error?.status === 401) {
-                refreshResult.error.data.message = "Your login has expired. "
+                refreshResult.error.data.message = "Your login has expired."
             }
             return refreshResult
         }
