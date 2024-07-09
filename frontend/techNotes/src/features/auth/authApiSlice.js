@@ -8,7 +8,11 @@ when I login with Trust this device and try to logout immediately without any re
 I think it's because in authApiSlice, at login mutation we are not using setCredential to set access token but we're doing this in refresh mutation, therefore i guess in persist login component when I want to select current token, I can't find any,  resulting into an error during logout.
 
 Think?
+
+I guess I was thinking wrong we are using body: { ...credentials } to store access token
 */
+
+// request and network request do not same as redux subscription, but subscription lasts as long as component is mounted
 
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
@@ -18,16 +22,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { ...credentials }
             }),
-            async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-                try {
-                    const { data } = await queryFulfilled
-                    console.log('In login mutation', data)
-                    const { accessToken } = data
-                    dispatch(setCredentials({ accessToken }))
-                } catch (err) {
-                    console.log(err)
-                }
-            }
         }),
         sendLogout: builder.mutation({
             query: () => ({

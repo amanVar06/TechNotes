@@ -5,9 +5,13 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "./authSlice";
 import { useLoginMutation } from "./authApiSlice";
 
+import PulseLoader from 'react-spinners/PulseLoader'
 import usePersist from "../../hooks/usePersist";
+import useTitle from '../../hooks/useTitle'
 
 const Login = () => {
+  useTitle('Employee Login')
+  
   const userRef = useRef(); // to set focus on user input
   const errRef = useRef(); // to set focus on error message
   const [username, setUsername] = useState("");
@@ -58,7 +62,7 @@ const Login = () => {
 
   const errClass = errMsg ? "errmsg" : "offscreen";
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <PulseLoader color={"#FFF"} />
 
   const content = (
     <section className="public">
